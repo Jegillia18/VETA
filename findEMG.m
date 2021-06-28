@@ -60,7 +60,7 @@ if ~use_command_line
 end
 %% define analysis parameters
 %edit these to suit your analysis needs
-parameters.sampling_rate = 5000; % samples per second (Hz)
+parameters.sampling_rate = 2000; % samples per second (Hz)
 parameters.emg_burst_threshold = .3; % raw threshold in V to consider for EMG
 parameters.emg_onset_std_threshold = 2; % number of std to consider for EMG burst onsets/offsets
 parameters.tms_artefact_threshold = .0001; % raw threshold magnitude in V to consider for TMS artefact
