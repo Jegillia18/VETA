@@ -57,12 +57,12 @@ function visualizeEMG_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to visualizeEMG (see VARARGIN)
 
 %% set the y-axis limits for plots
-use_default_limits = input('Would you like to use the default y-axis limits ([-5 5] volts)? yes(1) or no(0): ');
+use_default_limits = input('Would you like to use the default y-axis limits ([-2000 2000] volts)? yes(1) or no(0): ');
 if use_default_limits
-    plot1_ylims = [-5 5];
-    plot2_ylims = [-5 5];
-    plot3_ylims = [-5 5];
-    plot4_ylims = [-5 5];
+    plot1_ylims = [-2000 2000];
+    plot2_ylims = [-2000 2000];
+    plot3_ylims = [-2000 2000];
+    plot4_ylims = [-2000 2000];
     ylims = [plot1_ylims; plot2_ylims; plot3_ylims; plot4_ylims];
 else
     user_defined_limits = input('Enter preferred y-axis limits with one pair per channel (e.g. [-5 5] or [-2 2; -3 5; -1 1]): ');
