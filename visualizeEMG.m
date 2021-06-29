@@ -63,7 +63,9 @@ if use_default_limits
     plot2_ylims = [-2000 2000];
     plot3_ylims = [-2000 2000];
     plot4_ylims = [-2000 2000];
-    ylims = [plot1_ylims; plot2_ylims; plot3_ylims; plot4_ylims];
+    plot5_ylims = [-2000 2000];
+    plot6_ylims = [-2000 2000];
+    ylims = [plot1_ylims; plot2_ylims; plot3_ylims; plot4_ylims; plot5_ylims; plot6_ylims];
 else
     user_defined_limits = input('Enter preferred y-axis limits with one pair per channel (e.g. [-5 5] or [-2 2; -3 5; -1 1]): ');
     ylims = user_defined_limits;
