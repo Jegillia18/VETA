@@ -57,13 +57,15 @@ function visualizeEMG_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to visualizeEMG (see VARARGIN)
 
 %% set the y-axis limits for plots
-use_default_limits = input('Would you like to use the default y-axis limits ([-5 5] volts)? yes(1) or no(0): ');
+use_default_limits = input('Would you like to use the default y-axis limits ([-2000 2000] volts)? yes(1) or no(0): ');
 if use_default_limits
     plot1_ylims = [-2000 2000];
     plot2_ylims = [-2000 2000];
     plot3_ylims = [-2000 2000];
     plot4_ylims = [-2000 2000];
-    ylims = [plot1_ylims; plot2_ylims; plot3_ylims; plot4_ylims];
+    plot5_ylims = [-2000 2000];
+    plot6_ylims = [-2000 2000];
+    ylims = [plot1_ylims; plot2_ylims; plot3_ylims; plot4_ylims; plot5_ylims; plot6_ylims];
 else
     user_defined_limits = input('Enter preferred y-axis limits with one pair per channel (e.g. [-5 5] or [-2 2; -3 5; -1 1]): ');
     ylims = user_defined_limits;
@@ -151,7 +153,7 @@ function plot_figure(EMGdata,handles,a)
 ylims=handles.ylims;
 
 % buttons to display
-for n = 1:4
+for n = 1:6
     set(handles.(['ch', num2str(n),'_burst']),'visible','off');
     set(handles.(['ch', num2str(n),'_clearEMG']),'visible','off');
     set(handles.(['ch', num2str(n),'_TMS_art']),'visible','off');
@@ -753,7 +755,58 @@ EMGdata.trials.edited(a,1) = EMGdata.trials.edited(a,1)+1;
 handles.EMGdata = EMGdata;
 plot_figure(EMGdata,handles,a)
 guidata(hObject, handles);
+%% --- Executes on button press in ch5_MEP.
+function ch5_MEP_Callback(hObject, eventdata, handles)
+% hObject    handle to ch5_MEP (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+a=handles.a;
+EMGdata=handles.EMGdata;
 
+% manually select onset point for MEP
+x_new = ginput(2);
+EMGdata.trials.ch5_MEP_time(a,1) = x_new(1);
+EMGdata.trials.ch5_MEP_latency(a,1) = x_new(1) - EMGdata.trials.artloc(a,1);
+EMGdata.trials.ch5_MEP_offset(a,1) = x_new(2) - EMGdata.trials.artloc(a,1);
+
+MEPchannel=EMGdata.trials.ch5{a,1};
+MEPsearchrange = MEPchannel(round(x_new(1) * EMGdata.parameters.sampling_rate):round(x_new(2) * EMGdata.parameters.sampling_rate));
+[max_MEP_value,MEP_max_sample_point] = max(MEPsearchrange);
+[min_MEP_value,MEP_min_sample_point] = min(MEPsearchrange);
+EMGdata.trials.ch5_MEP_amplitude(a,1)=max_MEP_value-min_MEP_value;
+EMGdata.trials.ch5_MEP_area(a,1) = sum(abs(MEPsearchrange)) / (round(x_new(2) * EMGdata.parameters.sampling_rate) - round(x_new(1) * EMGdata.parameters.sampling_rate));
+EMGdata.trials.ch5_MEP_duration(a,1) = EMGdata.trials.ch5_MEP_offset(a,1)-EMGdata.trials.ch5_MEP_latency(a,1);
+
+EMGdata.trials.edited(a,1) = EMGdata.trials.edited(a,1)+1;
+handles.EMGdata = EMGdata;
+plot_figure(EMGdata,handles,a)
+guidata(hObject, handles);
+%% --- Executes on button press in ch5_MEP.
+function ch6_MEP_Callback(hObject, eventdata, handles)
+% hObject    handle to ch6_MEP (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+a=handles.a;
+EMGdata=handles.EMGdata;
+
+% manually select onset point for MEP
+x_new = ginput(2);
+EMGdata.trials.ch6_MEP_time(a,1) = x_new(1);
+EMGdata.trials.ch6_MEP_latency(a,1) = x_new(1) - EMGdata.trials.artloc(a,1);
+EMGdata.trials.ch6_MEP_offset(a,1) = x_new(2) - EMGdata.trials.artloc(a,1);
+
+MEPchannel=EMGdata.trials.ch5{a,1};
+MEPsearchrange = MEPchannel(round(x_new(1) * EMGdata.parameters.sampling_rate):round(x_new(2) * EMGdata.parameters.sampling_rate));
+[max_MEP_value,MEP_max_sample_point] = max(MEPsearchrange);
+[min_MEP_value,MEP_min_sample_point] = min(MEPsearchrange);
+EMGdata.trials.ch6_MEP_amplitude(a,1)=max_MEP_value-min_MEP_value;
+EMGdata.trials.ch6_MEP_area(a,1) = sum(abs(MEPsearchrange)) / (round(x_new(2) * EMGdata.parameters.sampling_rate) - round(x_new(1) * EMGdata.parameters.sampling_rate));
+EMGdata.trials.ch6_MEP_duration(a,1) = EMGdata.trials.ch6_MEP_offset(a,1)-EMGdata.trials.ch6_MEP_latency(a,1);
+
+EMGdata.trials.edited(a,1) = EMGdata.trials.edited(a,1)+1;
+handles.EMGdata = EMGdata;
+plot_figure(EMGdata,handles,a)
+guidata(hObject, handles);
 %% --- Executes on button press in ch1_clearMEP.
 function ch1_clearMEP_Callback(hObject, eventdata, handles)
 % hObject    handle to ch1_clearMEP (see GCBO)
@@ -825,8 +878,40 @@ EMGdata.trials.edited(a,1) = EMGdata.trials.edited(a,1)+1;
 handles.EMGdata = EMGdata;
 plot_figure(EMGdata,handles,a);
 guidata(hObject, handles);
+%% --- Executes on button press in ch5_clearMEP.
+function ch5_clearMEP_Callback(hObject, eventdata, handles)
+% hObject    handle to ch5_clearMEP (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+a=handles.a;
+EMGdata=handles.EMGdata;
 
+EMGdata.trials.ch5_MEP_latency(a,1)=0;
+EMGdata.trials.ch5_MEP_time(a,1)=0;
+EMGdata.trials.ch5_MEP_amplitude(a,1)=0;
+EMGdata.trials.ch5_RMS_preMEP(a,1)=0;
+EMGdata.trials.edited(a,1) = EMGdata.trials.edited(a,1)+1;
 
+handles.EMGdata = EMGdata;
+plot_figure(EMGdata,handles,a);
+guidata(hObject, handles);
+%% --- Executes on button press in ch6_clearMEP.
+function ch6_clearMEP_Callback(hObject, eventdata, handles)
+% hObject    handle to ch4_clearMEP (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+a=handles.a;
+EMGdata=handles.EMGdata;
+
+EMGdata.trials.ch6_MEP_latency(a,1)=0;
+EMGdata.trials.ch6_MEP_time(a,1)=0;
+EMGdata.trials.ch6_MEP_amplitude(a,1)=0;
+EMGdata.trials.ch6_RMS_preMEP(a,1)=0;
+EMGdata.trials.edited(a,1) = EMGdata.trials.edited(a,1)+1;
+
+handles.EMGdata = EMGdata;
+plot_figure(EMGdata,handles,a);
+guidata(hObject, handles);
 %% --- Executes on button press in ch1_burst.
 function ch1_burst_Callback(hObject, eventdata, handles)
 % hObject    handle to ch1_burst (see GCBO)
