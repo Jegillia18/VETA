@@ -60,13 +60,13 @@ if ~use_command_line
 end
 %% define analysis parameters
 %edit these to suit your analysis needs
-parameters.sampling_rate = 2000; %5000; % samples per second (Hz)
+parameters.sampling_rate = 1000; %5000; % samples per second (Hz)
 parameters.emg_burst_threshold = .3; % raw threshold in V to consider for EMG
 parameters.emg_onset_std_threshold = 2; % number of std to consider for EMG burst onsets/offsets
 parameters.tms_artefact_threshold = .0001; % raw threshold magnitude in V to consider for TMS artefact
 parameters.MEP_window_post_artefact = .1; % time in s after TMS to measure MEP in seconds
 parameters.pre_TMS_reference_window = .05;  % time before TMS to serve as reference baseline for MEP onset
-parameters.min_TMS_to_MEP_latency = .015; % number of secs after TMS to begin MEP onset detection
+parameters.min_TMS_to_MEP_latency = .010; % number of secs after TMS to begin MEP onset detection
 parameters.MEP_onset_std_threshold = .5; % number of std to consider for MEP onsets
 parameters.RMS_preMEP_EMG_tolerance = .05; % root mean square EMG tolerance for including MEP
 
@@ -96,12 +96,19 @@ if use_command_line
     
     parameters.MEP = input('Do you want to detect motor evoked potentials (MEPs)? yes(1) or no(0): ');
     parameters.CSP = input('Do you want to detect cortical silent period (CSP) epochs? yes(1) or no(0): ');
-    
+ 
+  % Translating Below: 
+  % if there are parameters for MEP or CSP, the artifact location (all
+  % rows, column 1) is 0. The pre TMS period starts at (all rows, column 1)
+  % at 0. These two lines are initializing the artifact and TMS locations.
     if parameters.MEP | parameters.CSP
         trials.artloc(:,1) = 0;
         trials.preTMS_period_start(:,1) = 0;
-        if ~isfield(parameters,'artchan_index')
-            parameters.artchan_index = input('Enter TMS artefact channel #: ');
+        if ~isfield(parameters,'artchan_index') % determining if channel is structured array
+            parameters.artchan_index = input('Enter TMS artefact channel #: '); % input what channel has the artefact
+  % When we input zero above, I think it acts as if there is no artefact.
+  % When input is another channel there is an error with finding events
+  % line 130, Artefact cannot be the same channel as an MEP
         end
     end
     

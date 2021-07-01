@@ -96,12 +96,19 @@ if use_command_line
     
     parameters.MEP = input('Do you want to detect motor evoked potentials (MEPs)? yes(1) or no(0): ');
     parameters.CSP = input('Do you want to detect cortical silent period (CSP) epochs? yes(1) or no(0): ');
-    
+ 
+  % Translating Below: 
+  % if there are parameters for MEP or CSP, the artifact location (all
+  % rows, column 1) is 0. The pre TMS period starts at (all rows, column 1)
+  % at 0. These two lines are initializing the artifact and TMS locations.
     if parameters.MEP | parameters.CSP
         trials.artloc(:,1) = 0;
         trials.preTMS_period_start(:,1) = 0;
-        if ~isfield(parameters,'artchan_index')
-            parameters.artchan_index = input('Enter TMS artefact channel #: ');
+        if ~isfield(parameters,'artchan_index') % determining if channel is structured array
+            parameters.artchan_index = input('Enter TMS artefact channel #: '); % input what channel has the artefact
+  % When we input zero above, I think it acts as if there is no artefact.
+  % When input is another channel there is an error with finding events
+  % line 130, Artefact cannot be the same channel as an MEP
         end
     end
     
@@ -151,7 +158,7 @@ if parameters.EMG
 end
 
 if parameters.artchan_index
-    trials.artloc(:,1) = 0;
+    trials.artloc(:,1) = 0
 end
 
 if parameters.MEP
@@ -185,12 +192,11 @@ for i = 1:height(trials)
             MEPchannel = trials.(['ch', num2str(parameters.MEP_channels(chan))]){i,1};
             if parameters.artchan_index
                 artchannel = trials.(['ch', num2str(parameters.artchan_index)]){i,1};
-                %[artefact_value, TMS_artefact_sample_index] = max(artchannel); %max(abs(artchannel));
-                artefact_value = .1;
-                TMS_artefact_sample_index = max(artchannel); %max(abs(artchannel));
+                [artefact_value, TMS_artefact_sample_index] = max(artchannel); %max(abs(artchannel));
+              
             else
                 TMS_artefact_sample_index = find(MEPchannel > parameters.tms_artefact_threshold,1);
-                artefact_value = .1; %abs(MEPchannel(TMS_artefact_sample_index));
+                artefact_value = abs(MEPchannel(TMS_artefact_sample_index));
             end                                    
 
             %set range to look for preMEP EMG activity to calculate RMS
