@@ -27,11 +27,15 @@ parse(p,EMG_wave,time,Threshold,direction,varargin{:});
                    %first_num = EMG_sec(1,1);
                     MEP_Onset_index(k) = k;
                     MEP_Onset_time(k) = time(k);
+                    
+                else
+                    MEP_Onset_index(k) = nan;
+                    MEP_Onset_time(k) = nan;
 
                 end
 
-
             end
+            
         catch
             for k = 1:(length(p.Results.EMG_wave)-p.Results.n)
 
@@ -44,9 +48,11 @@ parse(p,EMG_wave,time,Threshold,direction,varargin{:});
                    %first_num = EMG_sec(1,1);
                     MEP_Onset_index(k) = k;
                     MEP_Onset_time(k) = time(k);
+                else
+                    MEP_Onset_index(k) = nan;
+                    MEP_Onset_time(k) = nan;
 
                 end
-
 
             end
         end
@@ -70,6 +76,9 @@ parse(p,EMG_wave,time,Threshold,direction,varargin{:});
                    %first_num = EMG_sec(1,1);
                     MEP_Onset_index(k) = k;
                     MEP_Onset_time(k) = time(k);
+                else
+                    MEP_Onset_index(k) = nan;
+                    MEP_Onset_time(k) = nan;
 
                 end
 
@@ -87,6 +96,9 @@ parse(p,EMG_wave,time,Threshold,direction,varargin{:});
                    %first_num = EMG_sec(1,1);
                     MEP_Onset_index(k) = k;
                     MEP_Onset_time(k) = time(k);
+                else
+                    MEP_Onset_index(k) = nan;
+                    MEP_Onset_time(k) = nan;
 
                 end
 
