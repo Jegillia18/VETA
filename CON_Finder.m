@@ -9,7 +9,7 @@ addRequired(p,'Threshold',validScalarPosNum);
 addRequired(p,'direction',@ischar);
 addOptional(p,'n',defaultn,validScalarPosNum);
 addParameter(p,'start',validScalarPosNum);
-
+addParameter(p,'POI',validScalarPosNum);
 
 parse(p,EMG_wave,time,Threshold,direction,varargin{:});
    
@@ -24,10 +24,9 @@ parse(p,EMG_wave,time,Threshold,direction,varargin{:});
                 Log_sum = sum(Logical);
 
                 if Log_sum == p.Results.n
-                   %first_num = EMG_sec(1,1);
+                   
                     MEP_Onset_index(k) = k;
                     MEP_Onset_time(k) = time(k);
-                    
                 else
                     MEP_Onset_index(k) = nan;
                     MEP_Onset_time(k) = nan;
@@ -45,7 +44,7 @@ parse(p,EMG_wave,time,Threshold,direction,varargin{:});
                 Log_sum = sum(Logical);
 
                 if Log_sum == p.Results.n
-                   %first_num = EMG_sec(1,1);
+                   
                     MEP_Onset_index(k) = k;
                     MEP_Onset_time(k) = time(k);
                 else
@@ -56,12 +55,12 @@ parse(p,EMG_wave,time,Threshold,direction,varargin{:});
 
             end
         end
-            MEP_Onset_index = MEP_Onset_index';
-            MEP_Onset_time = MEP_Onset_time';
-            ind = find(sum(MEP_Onset_index,2)==0) ;
-            MEP_Onset_index(ind,:)=[];
-            ind_2 = find(sum(MEP_Onset_time,2)==0);
-            MEP_Onset_time(ind_2,:)=[];
+            MEP_Onset_index = rmmissing(MEP_Onset_index');
+            MEP_Onset_time = rmmissing(MEP_Onset_time');
+%             ind = find(sum(MEP_Onset_index,2)==0) ;
+%             MEP_Onset_index(ind,:)=[];
+%             ind_2 = find(sum(MEP_Onset_time,2)==0);
+%             MEP_Onset_time(ind_2,:)=[];
 
     else
         try
@@ -73,7 +72,7 @@ parse(p,EMG_wave,time,Threshold,direction,varargin{:});
                 Log_sum = sum(Logical);
 
                 if Log_sum == p.Results.n
-                   %first_num = EMG_sec(1,1);
+                   
                     MEP_Onset_index(k) = k;
                     MEP_Onset_time(k) = time(k);
                 else
@@ -93,7 +92,7 @@ parse(p,EMG_wave,time,Threshold,direction,varargin{:});
                 Log_sum = sum(Logical);
 
                 if Log_sum == p.Results.n
-                   %first_num = EMG_sec(1,1);
+                   
                     MEP_Onset_index(k) = k;
                     MEP_Onset_time(k) = time(k);
                 else
@@ -109,12 +108,22 @@ parse(p,EMG_wave,time,Threshold,direction,varargin{:});
         
     end
 
-        MEP_Onset_index = MEP_Onset_index';
-        MEP_Onset_time = MEP_Onset_time';
-        ind = find(sum(MEP_Onset_index,2)==0) ;
-        MEP_Onset_index(ind,:)=[];
-        ind_2 = find(sum(MEP_Onset_time,2)==0);
-        MEP_Onset_time(ind_2,:)=[];
+        MEP_Onset_index = rmmissing(MEP_Onset_index');
+        MEP_Onset_time = rmmissing(MEP_Onset_time');
+%         ind = find(sum(MEP_Onset_index,2)==0) ;
+%         MEP_Onset_index(ind,:)=[];
+%         ind_2 = find(sum(MEP_Onset_time,2)==0);
+%         MEP_Onset_time(ind_2,:)=[];
+
+if isempty(MEP_Onset_index)
+    MEP_Onset_index = nan;
+end
+
+if isempty(MEP_Onset_time)
+    MEP_Onset_time = nan;
+end
+
 
 end
-  
+
+
