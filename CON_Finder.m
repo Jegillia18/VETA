@@ -5,7 +5,7 @@ p = inputParser;
 validScalarPosNum = @(x) isnumeric(x);
 addRequired(p,'EMG_wave',validScalarPosNum);
 addRequired(p,'time',validScalarPosNum);
-addRequired(p,'Threshold',validScalarPosNum);
+addRequired(p,'Threshold',validScalarPosNum); %MCD in this case
 addRequired(p,'direction',@ischar);
 addOptional(p,'n',defaultn,validScalarPosNum);
 addParameter(p,'start',validScalarPosNum);
@@ -110,10 +110,11 @@ parse(p,EMG_wave,time,Threshold,direction,varargin{:});
 
         MEP_Onset_index = rmmissing(MEP_Onset_index');
         MEP_Onset_time = rmmissing(MEP_Onset_time');
-%         ind = find(sum(MEP_Onset_index,2)==0) ;
-%         MEP_Onset_index(ind,:)=[];
-%         ind_2 = find(sum(MEP_Onset_time,2)==0);
-%         MEP_Onset_time(ind_2,:)=[];
+
+            if p.Results.POI
+                MEP_Onset_index = p.Results.POI(MEP_Onset_index);
+                MEP_Onset_time = p.Results.POI(MEP_Onset_time);
+            end
 
 if isempty(MEP_Onset_index)
     MEP_Onset_index = nan;
